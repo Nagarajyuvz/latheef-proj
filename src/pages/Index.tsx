@@ -1,12 +1,45 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState, useEffect } from 'react';
+import { DonationService } from '@/services/donationService';
+import { LoginPage } from '@/components/LoginPage';
+import { Dashboard } from '@/components/Dashboard';
+import { MembersPage } from '@/components/MembersPage';
+import { DonationsPage } from '@/components/DonationsPage';
+import { Navigation } from '@/components/Navigation';
 
 const Index = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentPage, setCurrentPage] = useState('dashboard');
+
+  useEffect(() => {
+    setIsLoggedIn(DonationService.isLoggedIn());
+  }, []);
+
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setCurrentPage('dashboard');
+  };
+
+  if (!isLoggedIn) {
+    return <LoginPage onLogin={handleLogin} />;
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-background">
+      <Navigation 
+        currentPage={currentPage}
+        onNavigate={setCurrentPage}
+        onLogout={handleLogout}
+      />
+      
+      <main className="container mx-auto p-6">
+        {currentPage === 'dashboard' && <Dashboard onNavigate={setCurrentPage} />}
+        {currentPage === 'members' && <MembersPage onNavigate={setCurrentPage} />}
+        {currentPage === 'donations' && <DonationsPage onNavigate={setCurrentPage} />}
+      </main>
     </div>
   );
 };
