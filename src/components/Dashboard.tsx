@@ -21,14 +21,26 @@ interface DashboardProps {
 export const Dashboard = ({ onNavigate }: DashboardProps) => {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [events, setEvents] = useState<EventSummary[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     loadDashboardData();
   }, []);
 
-  const loadDashboardData = () => {
-    setStats(DonationService.getDashboardStats());
-    setEvents(DonationService.getEventSummaries());
+  const loadDashboardData = async () => {
+    try {
+      setLoading(true);
+      const [statsData, eventsData] = await Promise.all([
+        DonationService.getDashboardStats(),
+        DonationService.getEventSummaries()
+      ]);
+      setStats(statsData);
+      setEvents(eventsData);
+    } catch (error) {
+      console.error('Failed to load dashboard data:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const formatCurrency = (amount: number) => {
@@ -38,10 +50,11 @@ export const Dashboard = ({ onNavigate }: DashboardProps) => {
     }).format(amount);
   };
 
-  if (!stats) {
+  if (loading || !stats) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent"></div>
+        <span className="ml-2 text-muted-foreground">Loading dashboard data...</span>
       </div>
     );
   }

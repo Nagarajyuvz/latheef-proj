@@ -44,26 +44,32 @@ export const MembersPage = ({ onNavigate }: MembersPageProps) => {
     loadMembers();
   }, []);
 
-  const loadMembers = () => {
-    setMembers(DonationService.getMembers());
+  const loadMembers = async () => {
+    try {
+      const membersData = await DonationService.getMembers();
+      setMembers(membersData);
+    } catch (error) {
+      console.error('Failed to load members:', error);
+      toast.error('Failed to load members');
+    }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     try {
       if (editingMember) {
-        DonationService.updateMember(editingMember.id, formData);
+        await DonationService.updateMember(editingMember.id, formData);
         toast.success('Member updated successfully!');
         setEditingMember(null);
       } else {
-        DonationService.saveMember(formData);
+        await DonationService.saveMember(formData);
         toast.success('Member added successfully!');
         setShowAddForm(false);
       }
       
       resetForm();
-      loadMembers();
+      await loadMembers();
     } catch (error) {
       toast.error('Failed to save member. Please try again.');
     }
@@ -82,18 +88,26 @@ export const MembersPage = ({ onNavigate }: MembersPageProps) => {
     setShowAddForm(true);
   };
 
-  const handleDelete = (id: string, name: string) => {
-    if (window.confirm(`Are you sure you want to delete ${name}?`)) {
-      DonationService.deleteMember(id);
-      toast.success('Member deleted successfully');
-      loadMembers();
+  const handleDelete = async (id: string, name: string) => {
+    if (window.confirm(`Are you sure you want to delete ${name}? This will also delete all their donations.`)) {
+      try {
+        await DonationService.deleteMember(id);
+        toast.success('Member deleted successfully');
+        await loadMembers();
+      } catch (error) {
+        toast.error('Failed to delete member');
+      }
     }
   };
 
-  const toggleMemberStatus = (member: Member) => {
-    DonationService.updateMember(member.id, { isActive: !member.isActive });
-    toast.success(`Member ${!member.isActive ? 'activated' : 'deactivated'} successfully`);
-    loadMembers();
+  const toggleMemberStatus = async (member: Member) => {
+    try {
+      await DonationService.updateMember(member.id, { isActive: !member.isActive });
+      toast.success(`Member ${!member.isActive ? 'activated' : 'deactivated'} successfully`);
+      await loadMembers();
+    } catch (error) {
+      toast.error('Failed to update member status');
+    }
   };
 
   const resetForm = () => {

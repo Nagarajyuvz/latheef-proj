@@ -51,12 +51,21 @@ export const DonationsPage = ({ onNavigate }: DonationsPageProps) => {
     loadData();
   }, []);
 
-  const loadData = () => {
-    setDonations(DonationService.getDonations());
-    setMembers(DonationService.getMembers());
+  const loadData = async () => {
+    try {
+      const [donationsData, membersData] = await Promise.all([
+        DonationService.getDonations(),
+        DonationService.getMembers()
+      ]);
+      setDonations(donationsData);
+      setMembers(membersData);
+    } catch (error) {
+      console.error('Failed to load data:', error);
+      toast.error('Failed to load data');
+    }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!formData.memberId || !formData.amount) {
@@ -72,17 +81,17 @@ export const DonationsPage = ({ onNavigate }: DonationsPageProps) => {
       };
 
       if (editingDonation) {
-        DonationService.updateDonation(editingDonation.id, donationData);
+        await DonationService.updateDonation(editingDonation.id, donationData);
         toast.success('Donation updated successfully!');
         setEditingDonation(null);
       } else {
-        DonationService.saveDonation(donationData);
+        await DonationService.saveDonation(donationData);
         toast.success('Donation recorded successfully!');
       }
       
       resetForm();
       setShowAddForm(false);
-      loadData();
+      await loadData();
     } catch (error) {
       toast.error('Failed to save donation. Please try again.');
     }
@@ -103,11 +112,15 @@ export const DonationsPage = ({ onNavigate }: DonationsPageProps) => {
     setShowAddForm(true);
   };
 
-  const handleDelete = (id: string, memberName: string) => {
+  const handleDelete = async (id: string, memberName: string) => {
     if (window.confirm(`Are you sure you want to delete this donation from ${memberName}?`)) {
-      DonationService.deleteDonation(id);
-      toast.success('Donation deleted successfully');
-      loadData();
+      try {
+        await DonationService.deleteDonation(id);
+        toast.success('Donation deleted successfully');
+        await loadData();
+      } catch (error) {
+        toast.error('Failed to delete donation');
+      }
     }
   };
 
