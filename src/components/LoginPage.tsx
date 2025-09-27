@@ -108,15 +108,7 @@ export const LoginPage = ({ onLogin }: LoginPageProps) => {
               </Button>
             </form>
 
-            {/* Demo Credentials */}
-            <div className="mt-6 p-3 bg-muted/30 rounded-lg border border-border/50">
-              <p className="text-xs text-muted-foreground mb-2 flex items-center">
-                <Heart className="w-3 h-3 mr-1" />
-                Demo Credentials:
-              </p>
-              <p className="text-xs font-mono">Username: admin</p>
-              <p className="text-xs font-mono">Password: admin123</p>
-            </div>
+           
           </CardContent>
         </Card>
 
