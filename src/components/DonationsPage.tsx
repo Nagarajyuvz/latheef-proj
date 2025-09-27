@@ -8,19 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { 
-  DollarSign, 
-  Plus, 
-  Search, 
-  Calendar,
-  Filter,
-  Download,
-  Edit,
-  Trash2,
-  Users,
-  Star,
-  Gift
-} from 'lucide-react';
+import { DollarSign, Plus, Search, Calendar, Filter, Download, CreditCard as Edit, Trash2, Users, Star, Gift } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface DonationsPageProps {

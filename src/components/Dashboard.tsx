@@ -3,16 +3,7 @@ import { DashboardStats, EventSummary } from '@/types/donation';
 import { DonationService } from '@/services/donationService';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { 
-  Users, 
-  DollarSign, 
-  TrendingUp, 
-  AlertCircle,
-  Calendar,
-  Heart,
-  Star,
-  BarChart3
-} from 'lucide-react';
+import { Users, DollarSign, TrendingUp, CircleAlert as AlertCircle, Calendar, Heart, Star, ChartBar as BarChart3 } from 'lucide-react';
 
 interface DashboardProps {
   onNavigate: (page: string) => void;

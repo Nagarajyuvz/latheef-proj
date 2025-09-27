@@ -6,19 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Users, 
-  Plus, 
-  Search, 
-  Mail, 
-  Phone, 
-  MapPin, 
-  Calendar,
-  Edit,
-  Trash2,
-  CheckCircle,
-  XCircle
-} from 'lucide-react';
+import { Users, Plus, Search, Mail, Phone, MapPin, Calendar, CreditCard as Edit, Trash2, CircleCheck as CheckCircle, Circle as XCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface MembersPageProps {
